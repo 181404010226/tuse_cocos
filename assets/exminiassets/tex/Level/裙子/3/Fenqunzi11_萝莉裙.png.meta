@@ -1,0 +1,134 @@
+{
+  "ver": "1.0.27",
+  "importer": "image",
+  "imported": true,
+  "uuid": "17d902b4-f8b9-45b4-9678-c1b02801491f",
+  "files": [
+    ".json",
+    ".png"
+  ],
+  "subMetas": {
+    "6c48a": {
+      "importer": "texture",
+      "uuid": "17d902b4-f8b9-45b4-9678-c1b02801491f@6c48a",
+      "displayName": "Fenqunzi11_萝莉裙",
+      "id": "6c48a",
+      "name": "texture",
+      "userData": {
+        "wrapModeS": "clamp-to-edge",
+        "wrapModeT": "clamp-to-edge",
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0,
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "17d902b4-f8b9-45b4-9678-c1b02801491f",
+        "visible": false
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "f9941": {
+      "importer": "sprite-frame",
+      "uuid": "17d902b4-f8b9-45b4-9678-c1b02801491f@f9941",
+      "displayName": "Fenqunzi11_萝莉裙",
+      "id": "f9941",
+      "name": "spriteFrame",
+      "userData": {
+        "trimType": "auto",
+        "trimThreshold": 1,
+        "rotated": false,
+        "offsetX": -1,
+        "offsetY": 24.5,
+        "trimX": 2,
+        "trimY": 34,
+        "width": 114,
+        "height": 96,
+        "rawWidth": 120,
+        "rawHeight": 213,
+        "borderTop": 0,
+        "borderBottom": 0,
+        "borderLeft": 0,
+        "borderRight": 0,
+        "packable": true,
+        "pixelsToUnit": 100,
+        "pivotX": 0.5,
+        "pivotY": 0.5,
+        "meshType": 0,
+        "vertices": {
+          "rawPosition": [
+            -57,
+            -48,
+            0,
+            57,
+            -48,
+            0,
+            -57,
+            48,
+            0,
+            57,
+            48,
+            0
+          ],
+          "indexes": [
+            0,
+            1,
+            2,
+            2,
+            1,
+            3
+          ],
+          "uv": [
+            2,
+            179,
+            116,
+            179,
+            2,
+            83,
+            116,
+            83
+          ],
+          "nuv": [
+            0.016666666666666666,
+            0.38967136150234744,
+            0.9666666666666667,
+            0.38967136150234744,
+            0.016666666666666666,
+            0.8403755868544601,
+            0.9666666666666667,
+            0.8403755868544601
+          ],
+          "minPos": [
+            -57,
+            -48,
+            0
+          ],
+          "maxPos": [
+            57,
+            48,
+            0
+          ]
+        },
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "17d902b4-f8b9-45b4-9678-c1b02801491f@6c48a",
+        "atlasUuid": ""
+      },
+      "ver": "1.0.12",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "hasAlpha": true,
+    "type": "sprite-frame",
+    "fixAlphaTransparencyArtifacts": false,
+    "redirect": "17d902b4-f8b9-45b4-9678-c1b02801491f@6c48a"
+  }
+}
