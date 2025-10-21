@@ -144,11 +144,11 @@ export class SIJIWUYU_GameManager extends Component {
     //保存数据
     onSaveData() {
         let str = JSON.stringify(this.unLockLevel);
-        sys.localStorage.setItem("Fenqunzi", str);
+        sys.localStorage.setItem("SIJIWUYU_", str);
     }
     //获取数据
     onLoadData() {
-        let data = sys.localStorage.getItem("Fenqunzi");
+        let data = sys.localStorage.getItem("SIJIWUYU_");
         if (data == null || data == "") {
             this.unLockLevel = new Array(50).fill(false);
             this.unLockLevel[0] = true;
