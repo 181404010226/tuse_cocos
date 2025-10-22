@@ -541,7 +541,7 @@
       "levels",
       "length"
     ],
-    "value": 0
+    "value": 20
   },
   {
     "__type__": "cc.TargetInfo",

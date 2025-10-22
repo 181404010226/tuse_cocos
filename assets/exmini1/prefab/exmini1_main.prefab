@@ -56884,7 +56884,88 @@
     "adPanel": {
       "__id__": 2141
     },
-    "levels": [],
+    "levels": [
+      {
+        "__uuid__": "a1e98552-7379-4cfd-909b-b2d04a1cb158",
+        "__expectedType__": "cc.Prefab"
+      },
+      {
+        "__uuid__": "0b44a57a-dadf-4f40-b9e5-cec372cc77da",
+        "__expectedType__": "cc.Prefab"
+      },
+      {
+        "__uuid__": "74d3ffc4-ec66-4375-a9b1-0c2f5da59890",
+        "__expectedType__": "cc.Prefab"
+      },
+      {
+        "__uuid__": "2374afcc-6ccc-4ce0-827b-069949319ed0",
+        "__expectedType__": "cc.Prefab"
+      },
+      {
+        "__uuid__": "2c691ee0-ce6c-42ae-9331-1759951cf942",
+        "__expectedType__": "cc.Prefab"
+      },
+      {
+        "__uuid__": "0ed9f401-09ac-4a81-a7f3-24843a5b9577",
+        "__expectedType__": "cc.Prefab"
+      },
+      {
+        "__uuid__": "3b6c2458-1ebe-49bb-a859-ab8bbbb85149",
+        "__expectedType__": "cc.Prefab"
+      },
+      {
+        "__uuid__": "8fe46622-ed29-492e-a4b6-c5f8b0579f1c",
+        "__expectedType__": "cc.Prefab"
+      },
+      {
+        "__uuid__": "04a36f03-3aca-4ee6-9c36-956a91398d31",
+        "__expectedType__": "cc.Prefab"
+      },
+      {
+        "__uuid__": "4b955ad4-a884-4733-89aa-7f2031e41e51",
+        "__expectedType__": "cc.Prefab"
+      },
+      {
+        "__uuid__": "44f21b7e-d847-4fc2-adca-9e43177067fc",
+        "__expectedType__": "cc.Prefab"
+      },
+      {
+        "__uuid__": "162e9671-5111-459d-996c-b3d356a5cf83",
+        "__expectedType__": "cc.Prefab"
+      },
+      {
+        "__uuid__": "d9e16c0c-79ea-4079-9be9-68b7273f3589",
+        "__expectedType__": "cc.Prefab"
+      },
+      {
+        "__uuid__": "ed90d5ea-f2d2-49a8-922f-7dc18837147d",
+        "__expectedType__": "cc.Prefab"
+      },
+      {
+        "__uuid__": "9c156bcf-94b2-4911-9c44-45ca8399824a",
+        "__expectedType__": "cc.Prefab"
+      },
+      {
+        "__uuid__": "21d1db80-13fe-4509-b0fd-da67901dddd8",
+        "__expectedType__": "cc.Prefab"
+      },
+      {
+        "__uuid__": "48d03829-379b-4878-a0a2-4338fe931a63",
+        "__expectedType__": "cc.Prefab"
+      },
+      {
+        "__uuid__": "0003ec52-5a69-41d9-a2b3-a94f4a7b2f14",
+        "__expectedType__": "cc.Prefab"
+      },
+      {
+        "__uuid__": "e8c42669-03d6-4fc6-81c3-31018c81be42",
+        "__expectedType__": "cc.Prefab"
+      },
+      {
+        "__uuid__": "1754b3ed-ff5f-448d-b1cb-dd375846bed2",
+        "__expectedType__": "cc.Prefab"
+      }
+    ],
     "uiPanel": {
       "__id__": 2205
     },
