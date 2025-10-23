@@ -1,4 +1,4 @@
-import { _decorator, Button, Component, instantiate, Label, Node, Prefab, sys } from 'cc';
+import { _decorator, Button, Component, instantiate, Label, Node, Prefab, sys, Sprite, SpriteFrame } from 'cc';
 import { SIJIWUYU_Aud } from './SIJIWUYU_Aud';
 import { SIJIWUYU_UIPanel } from './SIJIWUYU_UIPanel';
 const { ccclass, property } = _decorator;
@@ -19,6 +19,8 @@ export class SIJIWUYU_GameManager extends Component {
     adPanel: Node = null;
     @property({ displayName: "关卡预制体", type:[Prefab]})
     levels: Prefab[] = [];
+    @property({ displayName: "关卡图标", type: [SpriteFrame] })
+    levelIcons: SpriteFrame[] = [];
     @property({ displayName: "UIPanel", type: Node })
     uiPanel: Node = null;
     @property({ displayName: "关卡父物体", type: Node })
@@ -39,6 +41,13 @@ export class SIJIWUYU_GameManager extends Component {
         for (let i = 0; i < this.allLevelBu.length; i++) {
             this.allLevelBu[i].name = (i + 1).toString();
             this.allLevelBu[i].getChildByName("Name").getComponent(Label).string = "第 " + (i + 1).toString() +" 关"
+            const iconNode = this.allLevelBu[i].getChildByName("Bg")?.getChildByName("Mask")?.getChildByName("Icon");
+            if (iconNode) {
+                const sp = iconNode.getComponent(Sprite);
+                if (sp && this.levelIcons && this.levelIcons[i]) {
+                    sp.spriteFrame = this.levelIcons[i];
+                }
+            }
             this.allLevelBu[i].on(Button.EventType.CLICK, () => { this.onLoadLevel((Number)(this.allLevelBu[i].name)); }, this);
         }
     }
