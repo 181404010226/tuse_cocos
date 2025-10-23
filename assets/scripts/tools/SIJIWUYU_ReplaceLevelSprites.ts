@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Sprite, SpriteFrame, Vec3, assetManager } from 'cc';
+import { _decorator, Component, Node, Sprite, SpriteFrame, Vec3, assetManager, UITransform } from 'cc';
 const { ccclass, property, executeInEditMode, disallowMultiple, menu } = _decorator;
 
 const DEFAULT_SPRITE_UUID = '01437c3e-ab48-49fb-9a83-06dc547724c0@f9941';
@@ -49,6 +49,36 @@ export class SIJIWUYU_ReplaceLevelSprites extends Component {
 
   @property({ tooltip: '执行过程打印日志' })
   verbose: boolean = true;
+
+  onEnable() {
+    this.reorderGroupAndAdjustWhiteBackground();
+  }
+
+  private reorderGroupAndAdjustWhiteBackground(): void {
+    const container = this.node.children.find(c => c.name === GROUP_CONTAINER_NAME) || null;
+    if (!container) {
+      if (this.verbose) console.warn('[SIJIWUYU_ReplaceLevelSprites] 未找到分组容器:', GROUP_CONTAINER_NAME);
+      return;
+    }
+    const findChild = (names: string[]) => container.children.find(c => names.includes(c.name)) || null;
+
+    const white = findChild(['whitebackground', '白色背景']);
+    const mask = findChild(['mask']);
+    const background = findChild(['background', '背景']);
+    const worker = findChild(['worker', 'work']);
+    const ordered = [white, mask, background, worker].filter(Boolean) as Node[];
+
+    ordered.forEach((n, i) => n.setSiblingIndex(i));
+
+    if (white) {
+      white.setPosition(0, 150, 0);
+      const ui = white.getComponent(UITransform) || white.addComponent(UITransform);
+      ui.width = 750;
+      ui.height = 1200;
+    }
+
+    if (this.verbose) console.log('[SIJIWUYU_ReplaceLevelSprites] 已调整 group 顺序和白色背景属性');
+  }
 
   update() {
     if (this.runOnce) {
