@@ -186,8 +186,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 750,
-      "height": 1200
+      "width": 1000,
+      "height": 1800
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -7720,12 +7720,6 @@
     "collectRoot": {
       "__id__": 310
     },
-    "successNode": {
-      "__id__": 266
-    },
-    "failureNode": {
-      "__id__": 280
-    },
     "_id": ""
   },
   {
@@ -8397,7 +8391,9 @@
     "speed": 300,
     "prerequisites": [],
     "togetherNodes": [
-      null
+      {
+        "__id__": 179
+      }
     ],
     "_id": ""
   },

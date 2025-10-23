@@ -189,8 +189,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 750,
-      "height": 1200
+      "width": 1000,
+      "height": 1800
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -4624,8 +4624,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 401.549,
-      "y": -690.405,
+      "x": 196.058,
+      "y": -700.19,
       "z": 0
     },
     "_lrot": {
@@ -6087,12 +6087,6 @@
     "autoCollectOnStart": true,
     "collectRoot": {
       "__id__": 246
-    },
-    "successNode": {
-      "__id__": 202
-    },
-    "failureNode": {
-      "__id__": 216
     },
     "_id": ""
   },
