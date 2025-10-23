@@ -40,6 +40,11 @@ export class SIJIWUYU_CustomMask extends Component {
         tooltip: '删除预览（设为 true 时执行一次）'
     })
     public deletePreviewOnce: boolean = false;
+
+    @property({
+        tooltip: '编辑器：开启一次，将边连接对齐到8方向（水平/竖直/±45°）'
+    })
+    public snapNodesOnce: boolean = false;
     
     private _graphics: Graphics = null;
     private _mask: Mask = null;
@@ -71,6 +76,14 @@ export class SIJIWUYU_CustomMask extends Component {
                 this.deletePreview();
                 this.deletePreviewOnce = false;
             }
+
+            // 编辑器：一次性对齐到八方向
+            if (this.snapNodesOnce) {
+                this.snapMaskNodesToEightDirections();
+                this.snapNodesOnce = false;
+                this.updateMask();
+            }
+            
             // 预览显示/隐藏
             if (this.previewEnabled) {
                 this.updatePreviewRectFromNodes();
@@ -380,5 +393,60 @@ export class SIJIWUYU_CustomMask extends Component {
                 child.name = this.node.name;
             }
         }
+    }
+
+    /**
+     * 将边连接对齐到八方向（水平/竖直/±45°），尽量保持位置变化最小
+     * 采用投影到最近方向的方法进行“就近矫正”
+     */
+    private snapMaskNodesToEightDirections(): void {
+        if (!this.isNodesValid()) return;
+
+        const dirs: Vec2[] = [
+            new Vec2(1, 0), new Vec2(-1, 0),
+            new Vec2(0, 1), new Vec2(0, -1),
+            new Vec2(1, 1), new Vec2(-1, 1),
+            new Vec2(1, -1), new Vec2(-1, -1),
+        ];
+        // 归一化
+        for (let i = 0; i < dirs.length; i++) {
+            const len = Math.sqrt(dirs[i].x * dirs[i].x + dirs[i].y * dirs[i].y);
+            dirs[i].x /= len;
+            dirs[i].y /= len;
+        }
+
+        const n = this.maskNodes.length;
+        for (let i = 0; i < n; i++) {
+            const a = this.maskNodes[i];
+            const b = this.maskNodes[(i + 1) % n];
+            if (!a || !b || !a.isValid || !b.isValid) continue;
+
+            const p1 = a.worldPosition;
+            const p2 = b.worldPosition;
+            const v = new Vec2(p2.x - p1.x, p2.y - p1.y);
+
+            // 原向量为零时跳过
+            if (Math.abs(v.x) < 1e-6 && Math.abs(v.y) < 1e-6) continue;
+
+            let bestIdx = 0;
+            let bestDot = v.x * dirs[0].x + v.y * dirs[0].y;
+
+            for (let k = 1; k < dirs.length; k++) {
+                const dot = v.x * dirs[k].x + v.y * dirs[k].y;
+                if (dot > bestDot) {
+                    bestDot = dot;
+                    bestIdx = k;
+                }
+            }
+
+            const d = dirs[bestIdx];
+            const snappedX = p1.x + d.x * bestDot;
+            const snappedY = p1.y + d.y * bestDot;
+
+            b.setWorldPosition(snappedX, snappedY, p2.z);
+        }
+
+        // 更新记录，避免立即触发重复刷新
+        this.recordNodePositions();
     }
 }

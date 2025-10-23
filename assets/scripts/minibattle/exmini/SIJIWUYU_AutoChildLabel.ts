@@ -25,12 +25,9 @@ export class SIJIWUYU_AutoChildLabel extends Component {
 
     onLoad() {
         // 运行时（非编辑器）禁用已存在的 Label，以免影响正式表现
-        if (!EDITOR && this.editorModeOnly) {
-            const targets = this.collectTargets();
-            for (const node of targets) {
-                const label = node.getComponent(Label);
-                if (label) label.enabled = false;
-            }
+        if (!EDITOR) {     
+            this.showLabels = false;
+            this.applyLabels();
         }
     }
 
