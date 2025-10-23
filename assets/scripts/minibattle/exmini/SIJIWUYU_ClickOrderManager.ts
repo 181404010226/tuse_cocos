@@ -21,8 +21,11 @@ export class SIJIWUYU_ClickOrderManager extends Component {
     private _clickedOrder: SIJIWUYU_MoveOnClick[] = [];
     private _callbacks = new Map<SIJIWUYU_MoveOnClick, (ev?: any) => void>();
     private _evaluated: boolean = false;
-
     private _layerOrderMap = new Map<Node, Node[]>(); // grandparent -> ordered parent layers
+    private _moveCompleteCallbacks = new Map<SIJIWUYU_MoveOnClick, (ev?: any) => void>();
+    private _moveCompleteSet = new Set<SIJIWUYU_MoveOnClick>();
+    private _pendingResult: boolean | null = null;
+    private _allClicked: boolean = false;
 
     start() {
         if (this.autoCollectOnStart && this.moveItems.length === 0) {
@@ -34,9 +37,13 @@ export class SIJIWUYU_ClickOrderManager extends Component {
 
     private bindEvents() {
         for (const move of this.moveItems) {
-            const cb = () => this.onNodeClick(move);
-            move.node.on(Node.EventType.TOUCH_END, cb, this);
-            this._callbacks.set(move, cb);
+            const clickCb = () => this.onNodeClick(move);
+            move.node.on(Node.EventType.TOUCH_END, clickCb, this);
+            this._callbacks.set(move, clickCb);
+
+            const completeCb = () => this.onMoveComplete(move);
+            move.node.on('MoveOnClick:MoveComplete', completeCb, this);
+            this._moveCompleteCallbacks.set(move, completeCb);
         }
     }
 
@@ -45,6 +52,11 @@ export class SIJIWUYU_ClickOrderManager extends Component {
             move.node.off(Node.EventType.TOUCH_END, cb, this);
         }
         this._callbacks.clear();
+
+        for (const [move, cb] of this._moveCompleteCallbacks) {
+            move.node.off('MoveOnClick:MoveComplete', cb, this);
+        }
+        this._moveCompleteCallbacks.clear();
     }
 
     private onNodeClick(move: SIJIWUYU_MoveOnClick) {
@@ -56,10 +68,14 @@ export class SIJIWUYU_ClickOrderManager extends Component {
         this.updateClickOrderReadonly();
 
         if (this._clickedOrder.length === this.moveItems.length) {
+            this._allClicked = true;
             const ok = this.evaluateOrder();
-            SIJIWUYU_GameManager.instance?.onShowResult(ok);
-            this._evaluated = true;
-            this.unbindEvents();
+            this._pendingResult = ok;
+            if (this._moveCompleteSet.size === this.moveItems.length) {
+                SIJIWUYU_GameManager.instance?.onShowResult(ok);
+                this._evaluated = true;
+                this.unbindEvents();
+            }
         }
     }
 
@@ -100,6 +116,18 @@ export class SIJIWUYU_ClickOrderManager extends Component {
         }
     }
 
+    private onMoveComplete(move: SIJIWUYU_MoveOnClick) {
+        if (this._evaluated) return;
+        this._moveCompleteSet.add(move);
+        if (this._allClicked && this._moveCompleteSet.size === this.moveItems.length) {
+            const ok = this._pendingResult ?? this.evaluateOrder();
+            this._pendingResult = ok;
+            SIJIWUYU_GameManager.instance?.onShowResult(ok);
+            this._evaluated = true;
+            this.unbindEvents();
+        }
+    }
+
     private evaluateOrder(): boolean {
         const indexMap = new Map<Node, number>();
         for (let i = 0; i < this._clickedOrder.length; i++) {
@@ -131,6 +159,10 @@ export class SIJIWUYU_ClickOrderManager extends Component {
         this._evaluated = false;
         this._clickedOrder.length = 0;
         this._layerOrderMap.clear();
+        this._moveCompleteSet.clear();
+        this._moveCompleteCallbacks.clear();
+        this._pendingResult = null;
+        this._allClicked = false;
         this.clickOrderReadonly = '';
         SIJIWUYU_GameManager.instance?.onResetResult();
         for (const move of this.moveItems) {
