@@ -2,6 +2,7 @@ import { _decorator, Component, Node, Sprite, SpriteFrame, Vec3, assetManager } 
 const { ccclass, property, executeInEditMode, disallowMultiple, menu } = _decorator;
 
 const DEFAULT_SPRITE_UUID = '01437c3e-ab48-49fb-9a83-06dc547724c0@f9941';
+const GROUP_CONTAINER_NAME = 'SIJIWUYU_Group';
 
 @ccclass('SIJIWUYU_ReplaceLevelSprites')
 @executeInEditMode(true)
@@ -51,8 +52,13 @@ export class SIJIWUYU_ReplaceLevelSprites extends Component {
 
   update() {
     if (this.runOnce) {
+      // 1) 将第一级子节点归入新容器
+      this.groupFirstLevelChildrenIntoContainer();
+
+      // 2) 确保默认 SpriteFrame 后执行替换与对齐
       const run = () => {
         this.applyReplace();
+        this.snapMarksNodes();
         this.runOnce = false;
       };
       this.ensureDefaultSpriteFrame(run);
@@ -67,6 +73,61 @@ export class SIJIWUYU_ReplaceLevelSprites extends Component {
       cur = cur.children.find(child => child.name === p) || null;
     }
     return cur;
+  }
+
+  private findNodeByName(root: Node, name: string): Node | null {
+    const stack: Node[] = [root];
+    while (stack.length) {
+      const n = stack.pop()!;
+      if (n.name === name) return n;
+      for (const c of n.children) stack.push(c);
+    }
+    return null;
+  }
+
+  private groupFirstLevelChildrenIntoContainer(): number {
+    let container = this.node.children.find(c => c.name === GROUP_CONTAINER_NAME) || null;
+    if (!container) {
+      container = new Node(GROUP_CONTAINER_NAME);
+      this.node.addChild(container);
+    }
+
+    const children = this.node.children.slice();
+    let moved = 0;
+    for (const child of children) {
+      if (child === container) continue;
+      // 重新挂载到容器，保持世界变换不变
+      // @ts-ignore: 第二个参数为 keepWorldTransform，某些版本类型未声明
+      child.setParent(container, true);
+      moved++;
+    }
+    container.setPosition(0, -200, 0);
+    if (this.verbose) console.log(`[SIJIWUYU_ReplaceLevelSprites] 已将第一级子节点归入 ${GROUP_CONTAINER_NAME}，移动 ${moved} 个。`);
+    return moved;
+  }
+
+  private snap5(v: number): number { return Math.round(v / 5) * 5; }
+
+  private snapMarksNodes(): number {
+    const marks = this.findNodeByName(this.node, 'Marks');
+    if (!marks) {
+      if (this.verbose) console.warn('[SIJIWUYU_ReplaceLevelSprites] 未找到 Marks 节点');
+      return 0;
+    }
+    let snapped = 0;
+    const stack: Node[] = [...marks.children];
+    const isTarget = (name: string) => /^Node(?:-\d+)?$/.test(name);
+    while (stack.length) {
+      const n = stack.pop()!;
+      if (isTarget(n.name)) {
+        const p = n.getPosition();
+        n.setPosition(this.snap5(p.x), this.snap5(p.y), this.snap5(p.z));
+        snapped++;
+      }
+      for (const c of n.children) stack.push(c);
+    }
+    if (this.verbose) console.log(`[SIJIWUYU_ReplaceLevelSprites] 已对齐 Marks 下节点 ${snapped} 个到 5 的倍数`);
+    return snapped;
   }
 
   public applyReplace(): void {
