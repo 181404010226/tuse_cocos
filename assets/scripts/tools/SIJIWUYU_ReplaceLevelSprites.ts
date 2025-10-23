@@ -73,8 +73,8 @@ export class SIJIWUYU_ReplaceLevelSprites extends Component {
     if (white) {
       white.setPosition(0, 150, 0);
       const ui = white.getComponent(UITransform) || white.addComponent(UITransform);
-      ui.width = 750;
-      ui.height = 1200;
+      ui.width = 1000;
+      ui.height = 1800;
     }
 
     if (this.verbose) console.log('[SIJIWUYU_ReplaceLevelSprites] 已调整 group 顺序和白色背景属性');

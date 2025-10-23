@@ -166,4 +166,27 @@ export class SIJIWUYU_GameManager extends Component {
             this.unLockLevel = JSON.parse(data) as boolean[];
         }
     }
+
+    // 统一显示结果（小玩法等模块调用）
+    public onShowResult(success: boolean) {
+        const ui = this.uiPanel?.getComponent(SIJIWUYU_UIPanel);
+        if (!ui) return;
+        ui.win.active = success;
+        ui.fail.active = !success;
+        if (success) {
+            // 胜利时解锁下一关
+            this.onAddLevel(this.currId + 1);
+            SIJIWUYU_Aud.instance.onPlayAud(SIJIWUYU_Aud.instance.winAud);
+        } else {
+            SIJIWUYU_Aud.instance.onPlayAud(SIJIWUYU_Aud.instance.failAud);
+        }
+    }
+
+    // 重置结果显示
+    public onResetResult() {
+        const ui = this.uiPanel?.getComponent(SIJIWUYU_UIPanel);
+        if (!ui) return;
+        ui.win.active = false;
+        ui.fail.active = false;
+    }
 }

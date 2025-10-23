@@ -1,4 +1,5 @@
-import { _decorator, Component, Node, v3, find, instantiate } from 'cc';
+import { _decorator, Component, Node } from 'cc';
+import { SIJIWUYU_GameManager } from './SIJIWUYU_GameManager';
 import { SIJIWUYU_MoveOnClick } from './SIJIWUYU_MoveOnClick';
 const { ccclass, property } = _decorator;
 
@@ -13,11 +14,6 @@ export class SIJIWUYU_ClickOrderManager extends Component {
     @property(Node)
     collectRoot: Node | null = null; // 自动收集的根节点，若为空则使用当前组件节点
 
-    @property(Node)
-    successNode: Node | null = null;
-
-    @property(Node)
-    failureNode: Node | null = null;
 
     @property({ displayName: '点击顺序', tooltip: '按点击顺序显示', readonly: true, serializable: false })
     clickOrderReadonly: string = '';
@@ -25,7 +21,7 @@ export class SIJIWUYU_ClickOrderManager extends Component {
     private _clickedOrder: SIJIWUYU_MoveOnClick[] = [];
     private _callbacks = new Map<SIJIWUYU_MoveOnClick, (ev?: any) => void>();
     private _evaluated: boolean = false;
-    private _resultNode: Node | null = null;
+
     private _layerOrderMap = new Map<Node, Node[]>(); // grandparent -> ordered parent layers
 
     start() {
@@ -61,7 +57,7 @@ export class SIJIWUYU_ClickOrderManager extends Component {
 
         if (this._clickedOrder.length === this.moveItems.length) {
             const ok = this.evaluateOrder();
-            this.showResult(ok);
+            SIJIWUYU_GameManager.instance?.onShowResult(ok);
             this._evaluated = true;
             this.unbindEvents();
         }
@@ -122,21 +118,7 @@ export class SIJIWUYU_ClickOrderManager extends Component {
         return true;
     }
 
-    private showResult(success: boolean) {
-        const canvas = find('Canvas');
-        const parent = canvas ?? this.node; // 优先挂到 Canvas
 
-        const template = success ? this.successNode : this.failureNode;
-        if (!template) return;
-
-        const instance = instantiate(template);
-        instance.name = 'ClickResult';
-        instance.setPosition(v3(0, 0, 0));
-        instance.parent = parent;
-        instance.setSiblingIndex(parent.children.length - 1);
-
-        this._resultNode = instance;
-    }
 
     private updateClickOrderReadonly(): void {
         this.clickOrderReadonly = this._clickedOrder.map(m => m.node.name).join(' -> ');
@@ -150,10 +132,7 @@ export class SIJIWUYU_ClickOrderManager extends Component {
         this._clickedOrder.length = 0;
         this._layerOrderMap.clear();
         this.clickOrderReadonly = '';
-        if (this._resultNode) {
-            this._resultNode.destroy();
-            this._resultNode = null;
-        }
+        SIJIWUYU_GameManager.instance?.onResetResult();
         for (const move of this.moveItems) {
             move.resetClick();
         }
