@@ -27,7 +27,8 @@ export class SIJIWUYU_CustomMask extends Component {
     public previewEnabled: boolean = true;
 
     @property({
-        tooltip: '预览线颜色'
+        tooltip: '预览线颜色',
+        readonly: true
     })
     public previewColor: Color = new Color(0, 255, 0, 255);
 
@@ -382,15 +383,38 @@ export class SIJIWUYU_CustomMask extends Component {
     /**
      * 查找子节点中的图片节点并重命名
      */
+    /**
+     * 将所有子节点的图片颜色设置为与第一个图片子节点相同
+     */
     private renameChildImageNodes(): void {
-        // 遍历所有子节点
+        // 先找到第一个拥有 Sprite 的子节点的颜色,并将其颜色赋值给previewColor
+        let firstSpriteColor: Color | null = null;
         for (let i = 0; i < this.node.children.length; i++) {
             const child = this.node.children[i];
-            // 检查子节点是否有Sprite组件
             const sprite = child.getComponent(Sprite);
             if (sprite) {
-                // 将图片节点重命名为与自身节点名称一致
-                child.name = this.node.name;
+                const c = sprite.color;
+                firstSpriteColor = new Color(c.r, c.g, c.b, c.a);
+                this.previewColor.set(c.r, c.g, c.b, c.a);
+                break;
+            }
+        }
+    
+        if (!firstSpriteColor) {
+            return;
+        }
+    
+        // 将所有拥有 Sprite 的子节点的颜色设置为第一个的颜色
+        for (let i = 0; i < this.node.children.length; i++) {
+            const child = this.node.children[i];
+            const sprite = child.getComponent(Sprite);
+            if (sprite) {
+                sprite.color = new Color(
+                    firstSpriteColor.r,
+                    firstSpriteColor.g,
+                    firstSpriteColor.b,
+                    firstSpriteColor.a
+                );
             }
         }
     }
