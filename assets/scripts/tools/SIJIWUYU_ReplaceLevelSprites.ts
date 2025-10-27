@@ -4,19 +4,20 @@ import { SIJIWUYU_MoveOnClick } from '../minibattle/exmini/SIJIWUYU_MoveOnClick'
 
 const DEFAULT_SPRITE_UUID = '01437c3e-ab48-49fb-9a83-06dc547724c0@f9941';
 const GROUP_CONTAINER_NAME = 'SIJIWUYU_Group';
+const SIJIWUYU_BG_SPRITE_UUID = 'ae7ed8e0-3193-4962-8e50-3cc928e879ba@f9941';
 
 // 基于颜色的 Spine SkeletonData 映射（来自 smallPeople/*/待机/ren_hong.json.meta）
 const COLOR_SKELETON_UUID_MAP: Record<string, string> = {
   yellow: 'ecd04ce6-f110-4d10-ae4e-5094c38bd1fe',
-  red: 'dcbd5fbc-f0cd-45f1-8688-35688a1f2f45',
-  green: '9a16ac54-b16d-4a69-8395-0fd883cc62d0',
-  blue: 'bbe97224-5f2c-4d36-95a9-8307557fb82f',
+  red:    'dcbd5fbc-f0cd-45f1-8688-35688a1f2f45',
+  green:  '9a16ac54-b16d-4a69-8395-0fd883cc62d0',
+  blue:   'bbe97224-5f2c-4d36-95a9-8307557fb82f',
   purple: 'e049c8a8-b805-44af-8f4f-089bd720d84c',
-  cyan: '3774ea2e-15b9-443c-9507-3b40dc90cd64',
+  cyan:   '3774ea2e-15b9-443c-9507-3b40dc90cd64',
   orange: '1fc230c2-3d43-46b8-a77d-945b35fca990',
-  brown: 'c5bc1be3-729f-4e5a-8c72-803f9263559',
+  brown:  'c5bc1be3-729f-4e5a-8c72-803f92639559',
   dark_yellow: '0163914c-aefa-43b9-bae4-d2633fe17908',
-  olive: '0163914c-aefa-43b9-bae4-d2633fe17908', // 橄榄与深黄使用同一资源
+  olive:  '0163914c-aefa-43b9-bae4-d2633fe17908', // 橄榄与深黄使用同一资源
 };
 
 // 颜色编码到分类键的精确映射（十六进制 RGB，无 #，大写）
@@ -115,7 +116,7 @@ export class SIJIWUYU_ReplaceLevelSprites extends Component {
     if (this.runOnce) {
       // 1) 将第一级子节点归入新容器
       this.groupFirstLevelChildrenIntoContainer();
-
+  
       // 2) 确保默认 SpriteFrame 后执行替换与对齐
       const run = () => {
         this.applyReplace();
@@ -124,10 +125,12 @@ export class SIJIWUYU_ReplaceLevelSprites extends Component {
       };
       this.ensureDefaultSpriteFrame(run);
     }
-
+  
     // 新增：勾选一次性为小人替换骨骼动画
     if (this.runActorsSetupOnce) {
       this.setupActorsWithColorSkeletons();
+      // 同步替换白色背景图片
+      this.replaceWhiteBackgroundWithBG();
       this.runActorsSetupOnce = false;
     }
   }
@@ -362,5 +365,49 @@ export class SIJIWUYU_ReplaceLevelSprites extends Component {
     if (this.verbose) {
       console.log(`[SIJIWUYU_ReplaceLevelSprites] 完成。目标名 ${targetName}，找到 ${foundCount} 个；已替换 ${replacedCount}，缺少组件/资源 ${missingSpriteCount}。`);
     }
+  }
+
+  // 替换 should_hide_in_hierarchy/level18/SIJIWUYU_Group/whitebackground 为指定 BG 资源
+  private replaceWhiteBackgroundWithBG(): void {
+    // 优先在当前根节点直接查找分组容器
+    let container = this.node.children.find(c => c.name === GROUP_CONTAINER_NAME) || null;
+    if (!container) {
+      // 回退到全局搜索（以防层级变化）
+      container = this.findNodeByName(this.node, GROUP_CONTAINER_NAME);
+    }
+    if (!container) {
+      if (this.verbose) console.warn('[SIJIWUYU_ReplaceLevelSprites] 未找到分组容器以替换白色背景:', GROUP_CONTAINER_NAME);
+      return;
+    }
+
+    const white = container.children.find(c => c.name === 'whitebackground' || c.name === '白色背景') || this.findNodeByName(container, 'whitebackground');
+    if (!white) {
+      if (this.verbose) console.warn('[SIJIWUYU_ReplaceLevelSprites] 未找到 whitebackground 节点');
+      return;
+    }
+
+    const sprite = white.getComponent(Sprite) || white.addComponent(Sprite);
+    this.loadSpriteFrameByUuid(SIJIWUYU_BG_SPRITE_UUID, (sf) => {
+      if (!sf) return;
+      sprite.spriteFrame = sf;
+      if (this.verbose) console.log('[SIJIWUYU_ReplaceLevelSprites] 已替换 whitebackground 的图片为 SIJIWUYU_BG');
+    });
+  }
+
+
+  private loadSpriteFrameByUuid(uuid: string, cb: (sf: SpriteFrame | null) => void) {
+    const cached = assetManager.assets.get(uuid) as SpriteFrame | undefined;
+    if (cached) {
+      cb(cached);
+      return;
+    }
+    assetManager.loadAny({ uuid, type: SpriteFrame }, (err: Error | null, asset: SpriteFrame) => {
+      if (err || !asset) {
+        if (this.verbose) console.warn('[SIJIWUYU_ReplaceLevelSprites] 加载 SpriteFrame 失败:', err?.message || 'asset 空');
+        cb(null);
+        return;
+      }
+      cb(asset);
+    });
   }
 }
