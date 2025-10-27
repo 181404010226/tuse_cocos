@@ -3,6 +3,9 @@ import { SIJIWUYU_GameManager } from './SIJIWUYU_GameManager';
 import { SIJIWUYU_MoveOnClick } from './SIJIWUYU_MoveOnClick';
 const { ccclass, property } = _decorator;
 
+// 通过 toggle 控制是否必须等待前一个填色完成（代码写死）
+const ENFORCE_WAIT_PREVIOUS_COMPLETE = true;
+
 @ccclass('SIJIWUYU_ClickOrderManager')
 export class SIJIWUYU_ClickOrderManager extends Component {
     @property([SIJIWUYU_MoveOnClick])
@@ -62,6 +65,17 @@ export class SIJIWUYU_ClickOrderManager extends Component {
     private onNodeClick(move: SIJIWUYU_MoveOnClick) {
         if (this._evaluated) return; // 已评估则忽略
         if (move.isClicked) return;  // 防重复
+
+        // 必须等待前一个小人填色完成后才能开始下一个（按点击顺序）
+        if (ENFORCE_WAIT_PREVIOUS_COMPLETE) {
+            if (this._clickedOrder.length > 0) {
+                const last = this._clickedOrder[this._clickedOrder.length - 1];
+                if (!this._moveCompleteSet.has(last)) {
+                    return; // 前一个未完成，直接忽略本次点击
+                }
+            }
+        }
+
         move.onClicked();
         this._clickedOrder.push(move);
         this.reorderTogetherNodesByClick(move);
@@ -145,8 +159,6 @@ export class SIJIWUYU_ClickOrderManager extends Component {
         }
         return true;
     }
-
-
 
     private updateClickOrderReadonly(): void {
         this.clickOrderReadonly = this._clickedOrder.map(m => m.node.name).join(' -> ');

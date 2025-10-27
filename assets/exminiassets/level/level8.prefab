@@ -656,9 +656,9 @@
     "_lineWidth": 20,
     "_strokeColor": {
       "__type__": "cc.Color",
-      "r": 30,
-      "g": 255,
-      "b": 0,
+      "r": 255,
+      "g": 246,
+      "b": 5,
       "a": 255
     },
     "_lineJoin": 2,
@@ -720,9 +720,9 @@
     "previewEnabled": true,
     "previewColor": {
       "__type__": "cc.Color",
-      "r": 30,
-      "g": 255,
-      "b": 0,
+      "r": 255,
+      "g": 246,
+      "b": 5,
       "a": 255
     },
     "previewLineWidth": 20,
@@ -3211,8 +3211,8 @@
     "_lineWidth": 20,
     "_strokeColor": {
       "__type__": "cc.Color",
-      "r": 253,
-      "g": 233,
+      "r": 30,
+      "g": 255,
       "b": 0,
       "a": 255
     },
@@ -3275,8 +3275,8 @@
     "previewEnabled": true,
     "previewColor": {
       "__type__": "cc.Color",
-      "r": 253,
-      "g": 233,
+      "r": 30,
+      "g": 255,
       "b": 0,
       "a": 255
     },
@@ -3484,8 +3484,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -391.549,
-      "y": -605.068,
+      "x": 517.703,
+      "y": 204.109,
       "z": 0
     },
     "_lrot": {
@@ -3700,9 +3700,9 @@
     "_lineWidth": 20,
     "_strokeColor": {
       "__type__": "cc.Color",
-      "r": 0,
-      "g": 40,
-      "b": 253,
+      "r": 88,
+      "g": 179,
+      "b": 231,
       "a": 255
     },
     "_lineJoin": 2,
@@ -3764,9 +3764,9 @@
     "previewEnabled": true,
     "previewColor": {
       "__type__": "cc.Color",
-      "r": 0,
-      "g": 40,
-      "b": 253,
+      "r": 88,
+      "g": 179,
+      "b": 231,
       "a": 255
     },
     "previewLineWidth": 20,
@@ -5292,8 +5292,8 @@
     },
     "_lscale": {
       "__type__": "cc.Vec3",
-      "x": 0.3,
-      "y": 0.3,
+      "x": 0.2,
+      "y": 0.2,
       "z": 1
     },
     "_mobility": 0,
@@ -5710,8 +5710,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -127.447,
-      "y": -412.185,
+      "x": 275.667,
+      "y": -18.556,
       "z": 0
     },
     "_lrot": {
@@ -5757,8 +5757,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 781.626,
-      "y": 782.622,
+      "x": -792.889,
+      "y": -739.725,
       "z": 0
     },
     "_lrot": {
@@ -6055,8 +6055,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -128.049,
-      "y": 446.81,
+      "x": -118.564,
+      "y": 411.241,
       "z": 0
     },
     "_lrot": {
@@ -6798,6 +6798,7 @@
       "__uuid__": "01437c3e-ab48-49fb-9a83-06dc547724c0@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
+    "runActorsSetupOnce": false,
     "runOnce": false,
     "verbose": true,
     "_id": ""
